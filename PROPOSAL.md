@@ -45,3 +45,12 @@ Once the dictionaries are recieved, the game should start and each player will t
 ### Thursday: Set up highscore table and finalize pygame graphics.
 We should create the logic to add highscores to the table and have only the top 5 scores in that table.
 The graphics of the game may be sloppy from the past two days, so this will be a clean-up day to make the game look nice.
+
+## Students
+
+- Jeremiah Bass
+- Lance Easley
+
+## GitHub Repository
+
+https://https://github.com/BaseCampCoding/unit-project-2-lance-jeremiah-b
