@@ -1,3 +1,24 @@
+## Description and Motivation
+
+In this project, we wanted to build a Battleship game inside of Python.
+Our twist will be making the game capable of being played on two different computers using Python.This way you could having a proper game of Battleship with multiple grids for your board and the enemy's board.
+
+## Extras
+- Special attacks
+Special attacks will be able to hit multiple grids with different patterns, and some will bypass various defensive mearsures.
+- Defensive measures
+For now, only one ship has a defensive measure. This defensive measure will allow that ship to survive a special attack that would otherwise destroy it.
+- Adding different kinds of ships
+A varity of spcial ships will be added to give the player more unique choices to make during set up
+- If larger ships are added, possibly expand game area grid.
+For example, if we add a 2X8 ship, then we could expand the grid as necessary to fit all the ships on the board.
+
+## Prior Art
+
+There are many variations of the classic Battleship game. We wanted to make a version that works with python, and allows you to play on two different computers. 
+
+A Battleship game that is similar to what we envisioned is "Electronic Battleship: Advanced Mission". This game has special weapons that can attack multiple grids, and they even have a scanning system used to approximate the location of an enemy ship. Idealy, we would not only have special attacks and scanning capabilties, but we would have also have defensive measures added to the mix. Our main focus, however, is to make the game multiplayer ready first. Extra ablilties and such wil be added if we are able to establish a solid network for the multiplayer experience.
+
 ## Core User Workflows
 
 - **Game Setup Logic:** We need to create a database that will store the different ship's information, like the size of each ship.
