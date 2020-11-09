@@ -45,13 +45,22 @@ The table will hold the top 5 scores, so if a sixth score is added, the table wi
 Generate a grid that lets the player place their ships where they want.
 Once the player confirms their positions, the game generates a dictionary to represent the grid.
 
+Jeremiah will work on setting up the database and tables and creating instances of a class from the data in the databases.
+Lance will work on getting the game area grid running, as well as the basics of pygame running.
+
 ### Wednesday: Create the server-client logic to have two clients play against each other.
 The clients should connect to the server, then the server should wait for both players to send their game area dictionaries.
 Once the dictionaries are recieved, the game should start and each player will then take turns firing at each other.
 
+Jeremiah will work on the client sending/recieving data and displaying the results of players' moves.
+Lance will work on the server recieving/sending data and creating functions to easily communicate data.
+
 ### Thursday: Set up highscore table and finalize pygame graphics.
 We should create the logic to add highscores to the table and have only the top 5 scores in that table.
 The graphics of the game may be sloppy from the past two days, so this will be a clean-up day to make the game look nice.
+
+Jeremiah will get the highscore table running.
+Lance will clean up the pygame graphics.
 
 ## Students
 
