@@ -14,6 +14,6 @@ cur.execute(
     ('Battleship', 4, 1),
     ('Cruiser', 3, 1),
     ('Submarine', 3, 1),
-    ('Destroyer', 2, 1),
+    ('Destroyer', 2, 1)
 """
 )
