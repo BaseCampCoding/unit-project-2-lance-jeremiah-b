@@ -1,5 +1,6 @@
 import pygame
 from classes import Grid_block
+from pprint import pprint
 
 # Network stuff (later)
 # Pull ship classes from database table
@@ -8,64 +9,111 @@ from classes import Grid_block
 # Choose ship locations
 # Confirm locations and generate dictionary
 
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+# This sets the WIDTH and HEIGHT of each grid location
+WIDTH = 40
+HEIGHT = 40
+MARGIN = 5
+
+# Initialize font module
+pygame.font.init()
+
+# font object
+font = pygame.font.Font('freesansbold.ttf', 32) 
+
+# Player text
+player_text = font.render('Your Ships', True, WHITE)
+player_textRect = player_text.get_rect()
+player_textRect.center = (925, 480)
+
+# Enemey text
+enemy_text = font.render('Enemy Ships', True, WHITE)
+enemy_textRect = enemy_text.get_rect()
+enemy_textRect.center = (230, 480)
+
+# Create a 2 dimensional array
+player_grid = []
+for row in range(10):
+    # Add an empty array that will hold each cell
+    # in this row
+    player_grid.append([])
+    for column in range(10):
+        player_grid[row].append(0)  # Append a cell
+pprint(player_grid)
+
+enemy_grid = []
+for row in range(10):
+    # Add an empty array that will hold each cell
+    # in this row
+    enemy_grid.append([])
+    for column in range(10):
+        enemy_grid[row].append(0)  # Append a cell
+pprint(enemy_grid)
+
 pygame.init()
 
-screen_x, screen_y = (1000, 600)
-
-win = pygame.display.set_mode((screen_x, screen_y))
+# Set the HEIGHT and WIDTH of the screen
+WINDOW_SIZE = [1155, 700]
+screen = pygame.display.set_mode(WINDOW_SIZE)
 
 pygame.display.set_caption("Battleship")
 
-game_area = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-]
+# Used to manage how fast the screen updates
+clock = pygame.time.Clock()
+ 
+# -------- Main Program Loop -----------
+done = False
+while not done:
+    for event in pygame.event.get():  # User did something
+        if event.type == pygame.QUIT:  # If user clicked close
+            done = True  # Flag that we are done so we exit this loop
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # User clicks the mouse. Get the position
+            pos = pygame.mouse.get_pos()
+            if pos[0] <= 450 and pos[1] <= 450:
+                # Change the x/y screen coordinates to grid coordinates
+                column = pos[0] // (WIDTH + MARGIN)
+                row = pos[1] // (HEIGHT + MARGIN)
+                # Set that location to one
+                player_grid[row][column] = 1
+                print("Grid coordinates: ", column, row)
+                # pprint(player_grid)
+                # pprint(enemy_grid)
 
-grid = [
-    [Grid_block(0, 0, 20, 20), Grid_block(20, 0, 20, 20), Grid_block(40, 0, 20, 20), Grid_block(60, 0, 20, 20), Grid_block(80, 0, 20, 20), 
-    Grid_block(100, 0, 20, 20), Grid_block(120, 0, 20, 20), Grid_block(140, 0, 20, 20), Grid_block(160, 0, 20, 20), Grid_block(180, 0, 20, 20), ]
 
-    [Grid_block(0, 20, 20, 20), Grid_block(20, 20, 20, 20), Grid_block(40, 20, 20, 20), Grid_block(60, 20, 20, 20), Grid_block(80, 20, 20, 20), 
-    Grid_block(100, 20, 20, 20), Grid_block(120, 20, 20, 20), Grid_block(140, 20, 20, 20), Grid_block(160, 20, 20, 20), Grid_block(180, 20, 20, 20), ]
+    # Set the screen background
+    screen.fill(BLACK)
 
-    [Grid_block(0, 40, 20, 20), Grid_block(20, 40, 20, 20), Grid_block(40, 40, 20, 20), Grid_block(60, 40, 20, 20), Grid_block(80, 40, 20, 20), 
-    Grid_block(100, 40, 20, 20), Grid_block(120, 40, 20, 20), Grid_block(140, 40, 20, 20), Grid_block(160, 40, 20, 20), Grid_block(180, 40, 20, 20), ]
+    # Display text
+    screen.blit(player_text, player_textRect)
+    screen.blit(enemy_text, enemy_textRect)
 
-    [Grid_block(0, 60, 20, 20), Grid_block(20, 60, 20, 20), Grid_block(40, 60, 20, 20), Grid_block(60, 60, 20, 20), Grid_block(80, 60, 20, 20), 
-    Grid_block(100, 60, 20, 20), Grid_block(120, 60, 20, 20), Grid_block(140, 60, 20, 20), Grid_block(160, 60, 20, 20), Grid_block(180, 60, 20, 20), ]
+    # Draw the grid
+    for row in range(10):
+        for column in range(10):
+            color = WHITE
+            if player_grid[row][column] == 1:
+                color = GREEN
+            pygame.draw.rect(screen, color, 
+                [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
 
-    [Grid_block(0, 80, 20, 20), Grid_block(20, 80, 20, 20), Grid_block(40, 80, 20, 20), Grid_block(60, 80, 20, 20), Grid_block(80, 80, 20, 20), 
-    Grid_block(100, 80, 20, 20), Grid_block(120, 80, 20, 20), Grid_block(140, 80, 20, 20), Grid_block(160, 80, 20, 20), Grid_block(180, 80, 20, 20), ]
+    for row in range(10):
+        for column in range(10):
+            color = WHITE
+            if enemy_grid[row][column] == 1:
+                color = GREEN
+            pygame.draw.rect(screen, color, 
+                [700 + ((MARGIN + WIDTH) * column + MARGIN), (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
 
-    [Grid_block(0, 100, 20, 20), Grid_block(20, 100, 20, 20), Grid_block(40, 100, 20, 20), Grid_block(60, 100, 20, 20), Grid_block(80, 100, 20, 20), 
-    Grid_block(100, 100, 20, 20), Grid_block(120, 100, 20, 20), Grid_block(140, 100, 20, 20), Grid_block(160, 100, 20, 20), Grid_block(180, 100, 20, 20), ]
+    # Limit to 60 frames per second
+    clock.tick(60)
 
-    [Grid_block(0, 120, 20, 20), Grid_block(20, 120, 20, 20), Grid_block(40, 120, 20, 20), Grid_block(60, 120, 20, 20), Grid_block(80, 120, 20, 20), 
-    Grid_block(100, 120, 20, 20), Grid_block(120, 120, 20, 20), Grid_block(140, 120, 20, 20), Grid_block(160, 120, 20, 20), Grid_block(180, 120, 20, 20), ]
+    # Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
 
-    [Grid_block(0, 0, 20, 20), Grid_block(20, 0, 20, 20), Grid_block(40, 0, 20, 20), Grid_block(60, 0, 20, 20), Grid_block(80, 0, 20, 20), 
-    Grid_block(100, 0, 20, 20), Grid_block(120, 0, 20, 20), Grid_block(140, 0, 20, 20), Grid_block(160, 0, 20, 20), Grid_block(180, 0, 20, 20), ]
-
-    [Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), 
-    Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), ]
-    
-    [Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), 
-    Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), Grid_block(0, 0, 20, 20), ]
-]
-
-run = True
-while run:
-    pygame.time.delay(16)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-    
+pygame.quit()
