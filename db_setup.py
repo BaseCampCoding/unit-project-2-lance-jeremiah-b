@@ -20,9 +20,12 @@ cur = con.cursor()
 
 cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
 
-winners_score = int(input("num pls: ")) # 15
+winners_score = int(input("num pls: "))  # 15
 
-highscore_list = [11, 24, 20, 16, 30]
+highscore_list = []
+cur.execute("SELECT * FROM Highscores")
+for row in cur.fetchall():
+    highscore_list.append(row[0])
 
 if not winners_score in highscore_list:
     cur.execute("INSERT INTO Highscores VALUES (?)", (winners_score,))
