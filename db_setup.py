@@ -20,13 +20,16 @@ cur = con.cursor()
 
 cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
 
-winners_score = [5, 4, 5, 9, 6, 2, 100]
+winners_score = int(input("num pls: "))
 
-for num in winners_score:
-    cur.execute("INSERT INTO Highscores VALUES (?)", (num,))
+cur.execute("INSERT INTO Highscores VALUES (?)", (winners_score,))
 
+
+cur.execute("SELECT * FROM Highscores ORDER BY scores DESC LIMIT 1")
+max_num = cur.fetchall()[0][0]
+cur.execute("DELETE FROM Highscores WHERE scores = ?", (str(max_num),))
 cur.execute("SELECT * FROM Highscores")
 for row in cur.fetchall():
     print(row[0])
-
+con.commit()
 con.close()
