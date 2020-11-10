@@ -24,12 +24,16 @@ winners_score = int(input("num pls: "))
 
 cur.execute("INSERT INTO Highscores VALUES (?)", (winners_score,))
 
+cur.execute("SELECT * FROM Highscores")
+if len(cur.fetchall()) > 5:
+    cur.execute("SELECT * FROM Highscores ORDER BY scores DESC LIMIT 1")
+    max_num = cur.fetchall()[0][0]
+    cur.execute("DELETE FROM Highscores WHERE scores = ?", (str(max_num),))
 
-cur.execute("SELECT * FROM Highscores ORDER BY scores DESC LIMIT 1")
-max_num = cur.fetchall()[0][0]
-cur.execute("DELETE FROM Highscores WHERE scores = ?", (str(max_num),))
+con.commit()
+
 cur.execute("SELECT * FROM Highscores")
 for row in cur.fetchall():
     print(row[0])
-con.commit()
+
 con.close()
