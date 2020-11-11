@@ -16,7 +16,7 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-ship_grids = {0: [], 1: []}
+ship_grids = {0: [], 1: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 3, 3, 0, 0, 0, 0], [0, 0, 0, 0, 3, 3, 0, 0, 0, 0], [0, 0, 0, 0, 3, 3, 0, 0, 0, 0], [0, 0, 0, 0, 3, 3, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}
 
 def threaded_client(conn, player):
     conn.send(str.encode("Connected"))
@@ -35,17 +35,18 @@ def threaded_client(conn, player):
                 response = 'game start'
             else:
                 x, y = reply.split(',')
+                x, y = int(x), int(y)
                 print('coords =', x, y)
                 if player == 0:
                     grid = ship_grids[1]
                     print(grid)
                     block = grid[x][y]
-                    print(block)
+                    print('block:', block)
                     if block == 3:
                         response = "1"
                     else:
                         response = "2"
-                if player == 1:
+                elif player == 1:
                     grid = ship_grids[0]
                     block = grid[x][y]
                     if block == 3:
