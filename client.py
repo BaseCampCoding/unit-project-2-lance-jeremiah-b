@@ -77,7 +77,7 @@ clock = pygame.time.Clock()
 # -------- Main Program Loop -----------
 setup_start = False
 game_start = False
-grid_response = ''
+grid_response = ""
 done = False
 response = n.send("ready")
 print(response)
@@ -85,7 +85,7 @@ if response == "setup start":
     print("Should be true")
     setup_start = True
 while not done:
-    if grid_response == 'game start':
+    if grid_response == "game start":
         setup_start = False
         game_start = True
     # Set the screen background
@@ -102,10 +102,11 @@ while not done:
                     # Change the x/y screen coordinates to grid coordinates
                     column = pos[0] // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
+                    print("Grid coordinates: ", column, row)
+                    result = n.send(f"{column},{row}")
                     # Set that location to one
                     if enemy_grid[row][column] == 0:
                         enemy_grid[row][column] = 1
-                    print("Grid coordinates: ", column, row)
                     pprint(enemy_grid)
             if setup_start:
                 if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
