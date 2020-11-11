@@ -14,6 +14,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+SEA_BLUE = (0, 175, 255)
 
 # This sets the WIDTH and HEIGHT of each grid location
 WIDTH = 40
@@ -82,9 +83,20 @@ while not done:
                 # Set that location to one
                 player_grid[row][column] = 1
                 print("Grid coordinates: ", column, row)
-                # pprint(player_grid)
-                # pprint(enemy_grid)
-
+                pprint(player_grid)
+                pprint(enemy_grid)
+        elif event.type == pygame.KEYDOWN:
+            # User clicks the mouse. Get the position
+            pos = pygame.mouse.get_pos()
+            if pos[0] <= 450 and pos[1] <= 450:
+                # Change the x/y screen coordinates to grid coordinates
+                column = pos[0] // (WIDTH + MARGIN)
+                row = pos[1] // (HEIGHT + MARGIN)
+                # Set that location to one
+                player_grid[row][column] = 2
+                print("Grid coordinates: ", column, row)
+                pprint(player_grid)
+                pprint(enemy_grid)
 
     # Set the screen background
     screen.fill(BLACK)
@@ -96,15 +108,17 @@ while not done:
     # Draw the grid
     for row in range(10):
         for column in range(10):
-            color = WHITE
+            color = SEA_BLUE
             if player_grid[row][column] == 1:
-                color = GREEN
+                color = RED
+            elif player_grid[row][column] == 2:
+                color = WHITE
             pygame.draw.rect(screen, color, 
                 [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
 
     for row in range(10):
         for column in range(10):
-            color = WHITE
+            color = SEA_BLUE
             if enemy_grid[row][column] == 1:
                 color = GREEN
             pygame.draw.rect(screen, color, 
