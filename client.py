@@ -1,5 +1,4 @@
 import pygame
-from classes import Grid_block
 from pprint import pprint
 
 # Network stuff (later)
