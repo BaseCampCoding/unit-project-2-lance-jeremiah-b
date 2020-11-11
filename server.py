@@ -41,7 +41,6 @@ def threaded_client(conn):
 
     print("Lost connection")
     conn.close()
-    players -= 1
 
 players = 0
 while True:
