@@ -26,10 +26,8 @@ def threaded_client(conn):
             response = ""
 
             if data:
-                if reply == 'yeet':
-                    response = 'skeet'
-                else:
-                    response = 'that was not a yeet'
+                if reply == 'ready':
+                    response = 'setup start'
                 print("Received: ", reply)
                 print("Sending : ", response)
             else:
@@ -43,10 +41,12 @@ def threaded_client(conn):
 
     print("Lost connection")
     conn.close()
+    players -= 1
 
-
+players = 0
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
-
+    players += 1
+    print(f'{players} Players Connected')
     start_new_thread(threaded_client, (conn,))
