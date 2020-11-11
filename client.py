@@ -79,17 +79,15 @@ setup_start = False
 game_start = False
 grid_response = ''
 done = False
+response = n.send("ready")
+print(response)
+if response == "setup start":
+    print("Should be true")
+    setup_start = True
 while not done:
-    if not setup_start:
-        response = n.send("ready")
-        print(response)
-        if response == "setup start":
-            print("Should be true")
-            setup_start = True
     if grid_response == 'game start':
         setup_start = False
         game_start = True
-
     # Set the screen background
     screen.fill(BLACK)
 
