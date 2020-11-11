@@ -91,39 +91,38 @@ while not done:
     # Set the screen background
     screen.fill(BLACK)
 
-    if setup_start:
-        for event in pygame.event.get():  # User did something
-            if event.type == pygame.QUIT:  # If user clicked close
-                done = True  # Flag that we are done so we exit this loop
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # User clicks the mouse. Get the position
-                pos = pygame.mouse.get_pos()
-                if game_start:
-                    if pos[0] <= 450 and pos[1] <= 450:
-                        # Change the x/y screen coordinates to grid coordinates
-                        column = pos[0] // (WIDTH + MARGIN)
-                        row = pos[1] // (HEIGHT + MARGIN)
-                        # Set that location to one
-                        if enemy_grid[row][column] == 0:
-                            enemy_grid[row][column] = 1
-                        print("Grid coordinates: ", column, row)
-                        pprint(enemy_grid)
-                if setup_start:
-                    if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
-                        # Change the x/y screen coordinates to grid coordinates
-                        column = (pos[0] - 700) // (WIDTH + MARGIN)
-                        row = pos[1] // (HEIGHT + MARGIN)
-                        # Set that location to one
-                        player_grid[row][column] = 3
-                        print("Grid coordinates: ", column, row)
-                        pprint(player_grid)
-                    # Confirm Button
-                    if (pos[0] > 838 and pos[0] < 965) and (
-                        pos[1] >= 530 and pos[1] <= 565
-                    ):
-                        ship_grid = json.dumps(player_grid)
-                        print("Confirm")
-                        grid_response = n.send(ship_grid)
+    for event in pygame.event.get():  # User did something
+        if event.type == pygame.QUIT:  # If user clicked close
+            done = True  # Flag that we are done so we exit this loop
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # User clicks the mouse. Get the position
+            pos = pygame.mouse.get_pos()
+            if game_start:
+                if pos[0] <= 450 and pos[1] <= 450:
+                    # Change the x/y screen coordinates to grid coordinates
+                    column = pos[0] // (WIDTH + MARGIN)
+                    row = pos[1] // (HEIGHT + MARGIN)
+                    # Set that location to one
+                    if enemy_grid[row][column] == 0:
+                        enemy_grid[row][column] = 1
+                    print("Grid coordinates: ", column, row)
+                    pprint(enemy_grid)
+            if setup_start:
+                if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
+                    # Change the x/y screen coordinates to grid coordinates
+                    column = (pos[0] - 700) // (WIDTH + MARGIN)
+                    row = pos[1] // (HEIGHT + MARGIN)
+                    # Set that location to one
+                    player_grid[row][column] = 3
+                    print("Grid coordinates: ", column, row)
+                    pprint(player_grid)
+                # Confirm Button
+                if (pos[0] > 838 and pos[0] < 965) and (
+                    pos[1] >= 530 and pos[1] <= 565
+                ):
+                    ship_grid = json.dumps(player_grid)
+                    print("Confirm")
+                    grid_response = n.send(ship_grid)
 
     # Display text
     screen.blit(player_text, player_textRect)
