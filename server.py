@@ -4,7 +4,7 @@ import sys
 import json
 
 server = "192.168.1.59"
-port = 5555
+port = 7000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -27,35 +27,36 @@ def threaded_client(conn, player):
             reply = data.decode("utf-8")
             response = ""
 
-            if data:
-                if reply == 'ready':
-                    response = 'setup start'
-                elif reply.startswith('['):
-                    ship_grids[player] = json.loads(reply)
-                    response = 'game start'
-                    print(player, ship_grids[player])
-                elif reply.startswith('.'):
-                    x, y = (int(reply[1]), int(reply[3]))
-                    print('coords =', x, y)
-                    if player == 0:
-                        block = ship_grids[1][x][y]
-                        if block == 3:
-                            response = 1
-                        else:
-                            response = 2
-                    if player == 1:
-                        block = ship_grids[0][x][y]
-                        if block == 3:
-                            response = 1
-                        else:
-                            response = 2
-                    
-                print("Received: ", reply, "From", player)
-                print("Sending : ", response, "To", player)
-            else:
-                print("Disconnected")
-                break
             
+            if reply == 'ready':
+                response = 'setup start'
+            elif reply.startswith('['):
+                ship_grids[player] = json.loads(reply)
+                response = 'game start'
+            else:
+                x, y = reply.split(',')
+                print('coords =', x, y)
+                if player == 0:
+                    grid = ship_grids[1]
+                    print(grid)
+                    block = grid[x][y]
+                    print(block)
+                    if block == 3:
+                        response = "1"
+                    else:
+                        response = "2"
+                if player == 1:
+                    grid = ship_grids[0]
+                    block = grid[x][y]
+                    if block == 3:
+                        response = "1"
+                    else:
+                        response = "2"
+                else:
+                    response = "9"
+                
+            print("Received: ", reply, "From", player)
+            print("Sending : ", response, "To", player)
 
             conn.sendall(str.encode(response))
         except:
