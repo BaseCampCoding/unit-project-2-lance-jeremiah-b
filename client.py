@@ -103,7 +103,11 @@ while not done:
                     column = pos[0] // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
                     print("Grid coordinates: ", column, row)
-                    result = n.send(f"{column},{row}")
+                    grid_coords = f".{column},{row}"
+                    print(grid_coords)
+                    result = n.send(grid_coords)
+                    print('result =', result)
+                    result = int(result)
                     # Set that location to one
                     if enemy_grid[row][column] == 0:
                         enemy_grid[row][column] = result

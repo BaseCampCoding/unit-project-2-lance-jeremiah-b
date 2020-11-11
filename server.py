@@ -34,11 +34,24 @@ def threaded_client(conn, player):
                     ship_grids[player] = json.loads(reply)
                     response = 'game start'
                     print(player, ship_grids[player])
-                else:
-                    coord = reply.split(',')
+                elif reply.startswith('.'):
+                    x, y = (int(reply[1]), int(reply[3]))
+                    print('coords =', x, y)
+                    if player == 0:
+                        block = ship_grids[1][x][y]
+                        if block == 3:
+                            response = 1
+                        else:
+                            response = 2
+                    if player == 1:
+                        block = ship_grids[0][x][y]
+                        if block == 3:
+                            response = 1
+                        else:
+                            response = 2
                     
-                print("Received: ", reply)
-                print("Sending : ", response)
+                print("Received: ", reply, "From", player)
+                print("Sending : ", response, "To", player)
             else:
                 print("Disconnected")
                 break
