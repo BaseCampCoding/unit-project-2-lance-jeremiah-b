@@ -95,69 +95,67 @@ while not done:
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
 
-    while True:
+        setup_start = False
         if n.wait_for_key("setup start"):
-            break
-        else:
-            pass
+            setup_start = True
+        if setup_start:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # User clicks the mouse. Get the position
+                pos = pygame.mouse.get_pos()
+                if pos[0] <= 450 and pos[1] <= 450:
+                    # Change the x/y screen coordinates to grid coordinates
+                    column = pos[0] // (WIDTH + MARGIN)
+                    row = pos[1] // (HEIGHT + MARGIN)
+                    # Set that location to one
+                    if player_grid[row][column] == 0:
+                        player_grid[row][column] = 1
+                    print("Grid coordinates: ", column, row)
+                    pprint(player_grid)
+                    pprint(enemy_grid)
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            # User clicks the mouse. Get the position
-            pos = pygame.mouse.get_pos()
-            if pos[0] <= 450 and pos[1] <= 450:
-                # Change the x/y screen coordinates to grid coordinates
-                column = pos[0] // (WIDTH + MARGIN)
-                row = pos[1] // (HEIGHT + MARGIN)
-                # Set that location to one
-                if player_grid[row][column] == 0:
-                    player_grid[row][column] = 1
-                print("Grid coordinates: ", column, row)
-                pprint(player_grid)
-                pprint(enemy_grid)
+            # Set the screen background
+            screen.fill(BLACK)
 
-    # Set the screen background
-    screen.fill(BLACK)
+            # Display text
+            screen.blit(player_text, player_textRect)
+            screen.blit(enemy_text, enemy_textRect)
 
-    # Display text
-    screen.blit(player_text, player_textRect)
-    screen.blit(enemy_text, enemy_textRect)
+            # Draw the grid
+            for row in range(10):
+                for column in range(10):
+                    color = SEA_BLUE
+                    if player_grid[row][column] == 1:
+                        color = RED
+                    elif player_grid[row][column] == 2:
+                        color = WHITE
+                    pygame.draw.rect(
+                        screen,
+                        color,
+                        [
+                            (MARGIN + WIDTH) * column + MARGIN,
+                            (MARGIN + HEIGHT) * row + MARGIN,
+                            WIDTH,
+                            HEIGHT,
+                        ],
+                        4,
+                    )
 
-    # Draw the grid
-    for row in range(10):
-        for column in range(10):
-            color = SEA_BLUE
-            if player_grid[row][column] == 1:
-                color = RED
-            elif player_grid[row][column] == 2:
-                color = WHITE
-            pygame.draw.rect(
-                screen,
-                color,
-                [
-                    (MARGIN + WIDTH) * column + MARGIN,
-                    (MARGIN + HEIGHT) * row + MARGIN,
-                    WIDTH,
-                    HEIGHT,
-                ],
-                4,
-            )
-
-    for row in range(10):
-        for column in range(10):
-            color = SEA_BLUE
-            if enemy_grid[row][column] == 1:
-                color = GREEN
-            pygame.draw.rect(
-                screen,
-                color,
-                [
-                    700 + ((MARGIN + WIDTH) * column + MARGIN),
-                    (MARGIN + HEIGHT) * row + MARGIN,
-                    WIDTH,
-                    HEIGHT,
-                ],
-                4,
-            )
+                for row in range(10):
+                    for column in range(10):
+                        color = SEA_BLUE
+                        if enemy_grid[row][column] == 1:
+                            color = GREEN
+                        pygame.draw.rect(
+                            screen,
+                            color,
+                            [
+                                700 + ((MARGIN + WIDTH) * column + MARGIN),
+                                (MARGIN + HEIGHT) * row + MARGIN,
+                                WIDTH,
+                                HEIGHT,
+                            ],
+                            4,
+                        )
 
     # Limit to 60 frames per second
     clock.tick(60)
