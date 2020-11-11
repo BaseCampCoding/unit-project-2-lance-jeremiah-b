@@ -29,6 +29,3 @@ class Network:
         if response == key:
             return True
         return False
-    
-    def recv(self):
-        return self.client.recv(2048).decode()
