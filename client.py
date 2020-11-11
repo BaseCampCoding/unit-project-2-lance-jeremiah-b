@@ -1,12 +1,30 @@
 import pygame
 from pprint import pprint
 
-# Network stuff (later)
-# Pull ship classes from database table
-# Pygame screen
-# Grid setup
-# Choose ship locations
-# Confirm locations and generate dictionary
+# 0 is empty sea
+# 1 is a hit
+# 2 is a miss
+# 3 is a ship
+
+# 1. Wait for 2 players to connect
+# - server sends "setup start" to start game on both client
+
+# 2. Ship setup
+# - send ship list
+# - wait for both players to send ship lists
+# - once they are both sent, server sends "game start"
+
+# 3. Battle!
+# - players take turns firing at each other
+# - client will send a grid location to server
+# - server takes grid location and checks to see if there is a ship at that location
+# 	- If yes, send 1 for a hit
+# 	- Else, send 2 for a miss
+# - server keeps track of how many ships are left
+# 	- once a player's ships are all gone, the other player wins.
+
+# 4. Highscore table
+# - add the number of moves to the winner's highscore table.
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -14,6 +32,7 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 SEA_BLUE = (0, 175, 255)
+GREY = (128, 128, 128)
 
 # This sets the WIDTH and HEIGHT of each grid location
 WIDTH = 40
@@ -72,6 +91,10 @@ while not done:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
+        
+    while True:
+        n.wait_for_key("")
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
@@ -80,19 +103,17 @@ while not done:
                 column = pos[0] // (WIDTH + MARGIN)
                 row = pos[1] // (HEIGHT + MARGIN)
                 # Set that location to one
-                player_grid[row][column] = 1
+                if player_grid[row][column] == 0:
+                    player_grid[row][column] = 1
                 print("Grid coordinates: ", column, row)
                 pprint(player_grid)
                 pprint(enemy_grid)
-        elif event.type == pygame.KEYDOWN:
-            # User clicks the mouse. Get the position
-            pos = pygame.mouse.get_pos()
-            if pos[0] <= 450 and pos[1] <= 450:
+            if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
                 # Change the x/y screen coordinates to grid coordinates
-                column = pos[0] // (WIDTH + MARGIN)
+                column = (pos[0] - 700) // (WIDTH + MARGIN)
                 row = pos[1] // (HEIGHT + MARGIN)
                 # Set that location to one
-                player_grid[row][column] = 2
+                enemy_grid[row][column] = 3
                 print("Grid coordinates: ", column, row)
                 pprint(player_grid)
                 pprint(enemy_grid)
@@ -118,8 +139,8 @@ while not done:
     for row in range(10):
         for column in range(10):
             color = SEA_BLUE
-            if enemy_grid[row][column] == 1:
-                color = GREEN
+            if enemy_grid[row][column] == 3:
+                color = GREY
             pygame.draw.rect(screen, color, 
                 [700 + ((MARGIN + WIDTH) * column + MARGIN), (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
 
