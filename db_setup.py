@@ -17,10 +17,11 @@ cur = con.cursor()
 #     ('Destroyer', 2, 1)
 # """
 # )
+# con.close()
 
 cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
 
-winners_score = int(input("num pls: "))  # 15
+winners_score = int(input("num pls: "))
 
 highscore_list = []
 cur.execute("SELECT * FROM Highscores")

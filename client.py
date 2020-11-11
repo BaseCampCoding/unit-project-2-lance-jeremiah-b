@@ -106,7 +106,7 @@ while not done:
                     result = n.send(f"{column},{row}")
                     # Set that location to one
                     if enemy_grid[row][column] == 0:
-                        enemy_grid[row][column] = 1
+                        enemy_grid[row][column] = result
                     pprint(enemy_grid)
             if setup_start:
                 if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
