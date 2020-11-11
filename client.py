@@ -1,5 +1,6 @@
 import pygame
 from pprint import pprint
+import network
 
 # 0 is empty sea
 # 1 is a hit
@@ -26,6 +27,8 @@ from pprint import pprint
 # 4. Highscore table
 # - add the number of moves to the winner's highscore table.
 
+n = network.Network()
+
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -43,15 +46,15 @@ MARGIN = 5
 pygame.font.init()
 
 # font object
-font = pygame.font.Font('freesansbold.ttf', 32) 
+font = pygame.font.Font("freesansbold.ttf", 32)
 
 # Player text
-player_text = font.render('Your Ships', True, WHITE)
+player_text = font.render("Your Ships", True, WHITE)
 player_textRect = player_text.get_rect()
 player_textRect.center = (925, 480)
 
 # Enemey text
-enemy_text = font.render('Enemy Ships', True, WHITE)
+enemy_text = font.render("Enemy Ships", True, WHITE)
 enemy_textRect = enemy_text.get_rect()
 enemy_textRect.center = (230, 480)
 
@@ -84,18 +87,21 @@ pygame.display.set_caption("Battleship")
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
- 
+
 # -------- Main Program Loop -----------
 done = False
 while not done:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
-        
-    while True:
-        n.wait_for_key("")
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+    while True:
+        if n.wait_for_key("setup start"):
+            break
+        else:
+            pass
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
             if pos[0] <= 450 and pos[1] <= 450:
@@ -105,15 +111,6 @@ while not done:
                 # Set that location to one
                 if player_grid[row][column] == 0:
                     player_grid[row][column] = 1
-                print("Grid coordinates: ", column, row)
-                pprint(player_grid)
-                pprint(enemy_grid)
-            if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
-                # Change the x/y screen coordinates to grid coordinates
-                column = (pos[0] - 700) // (WIDTH + MARGIN)
-                row = pos[1] // (HEIGHT + MARGIN)
-                # Set that location to one
-                enemy_grid[row][column] = 3
                 print("Grid coordinates: ", column, row)
                 pprint(player_grid)
                 pprint(enemy_grid)
@@ -133,16 +130,34 @@ while not done:
                 color = RED
             elif player_grid[row][column] == 2:
                 color = WHITE
-            pygame.draw.rect(screen, color, 
-                [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
+            pygame.draw.rect(
+                screen,
+                color,
+                [
+                    (MARGIN + WIDTH) * column + MARGIN,
+                    (MARGIN + HEIGHT) * row + MARGIN,
+                    WIDTH,
+                    HEIGHT,
+                ],
+                4,
+            )
 
     for row in range(10):
         for column in range(10):
             color = SEA_BLUE
-            if enemy_grid[row][column] == 3:
-                color = GREY
-            pygame.draw.rect(screen, color, 
-                [700 + ((MARGIN + WIDTH) * column + MARGIN), (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
+            if enemy_grid[row][column] == 1:
+                color = GREEN
+            pygame.draw.rect(
+                screen,
+                color,
+                [
+                    700 + ((MARGIN + WIDTH) * column + MARGIN),
+                    (MARGIN + HEIGHT) * row + MARGIN,
+                    WIDTH,
+                    HEIGHT,
+                ],
+                4,
+            )
 
     # Limit to 60 frames per second
     clock.tick(60)
