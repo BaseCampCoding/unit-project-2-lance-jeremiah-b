@@ -77,6 +77,7 @@ clock = pygame.time.Clock()
 # -------- Main Program Loop -----------
 setup_start = False
 game_start = False
+grid_response = ''
 done = False
 while not done:
     if not setup_start:
@@ -85,8 +86,9 @@ while not done:
         if response == "setup start":
             print("Should be true")
             setup_start = True
-    if game_start:
+    if grid_response == 'game start':
         setup_start = False
+        game_start = True
 
     # Set the screen background
     screen.fill(BLACK)
@@ -107,7 +109,6 @@ while not done:
                         if enemy_grid[row][column] == 0:
                             enemy_grid[row][column] = 1
                         print("Grid coordinates: ", column, row)
-                        pprint(player_grid)
                         pprint(enemy_grid)
                 if setup_start:
                     if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
@@ -124,12 +125,13 @@ while not done:
                     ):
                         ship_grid = json.dumps(player_grid)
                         print("Confirm")
-                        n.send(ship_grid)
+                        grid_response = n.send(ship_grid)
 
     # Display text
     screen.blit(player_text, player_textRect)
     screen.blit(enemy_text, enemy_textRect)
-    screen.blit(confirm_text, confirm_textRect)
+    if setup_start:
+        screen.blit(confirm_text, confirm_textRect)
 
     # Draw the grid
     for row in range(10):

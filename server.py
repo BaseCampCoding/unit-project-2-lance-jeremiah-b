@@ -1,6 +1,7 @@
 import socket
 from _thread import *
 import sys
+import json
 
 server = "192.168.1.59"
 port = 5555
@@ -30,7 +31,9 @@ def threaded_client(conn, player):
                 if reply == 'ready':
                     response = 'setup start'
                 if reply.startswith('['):
+                    ship_grids[player] = json.loads(reply)
                     response = 'game start'
+                    print(player, ship_grids[player])
                 print("Received: ", reply)
                 print("Sending : ", response)
             else:
