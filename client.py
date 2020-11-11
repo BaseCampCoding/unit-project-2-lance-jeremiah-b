@@ -70,6 +70,7 @@ clock = pygame.time.Clock()
  
 # -------- Main Program Loop -----------
 setup_start = False
+game_start = False
 done = False
 while not done:
     if not setup_start:
@@ -78,10 +79,12 @@ while not done:
         if response == 'setup start':
             print('Should be true')
             setup_start = True
+    if game_start:
+        setup_start = False
     
     # Set the screen background
     screen.fill(BLACK)
-    
+
     if setup_start:
         for event in pygame.event.get(): # User did something
             if event.type == pygame.QUIT:  # If user clicked close
@@ -89,25 +92,27 @@ while not done:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # User clicks the mouse. Get the position
                 pos = pygame.mouse.get_pos()
-                if pos[0] <= 450 and pos[1] <= 450:
-                    # Change the x/y screen coordinates to grid coordinates
-                    column = pos[0] // (WIDTH + MARGIN)
-                    row = pos[1] // (HEIGHT + MARGIN)
-                    # Set that location to one
-                    if player_grid[row][column] == 0:
-                        player_grid[row][column] = 1
-                    print("Grid coordinates: ", column, row)
-                    pprint(player_grid)
-                    pprint(enemy_grid)
-                if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
-                    # Change the x/y screen coordinates to grid coordinates
-                    column = (pos[0] - 700) // (WIDTH + MARGIN)
-                    row = pos[1] // (HEIGHT + MARGIN)
-                    # Set that location to one
-                    enemy_grid[row][column] = 3
-                    print("Grid coordinates: ", column, row)
-                    pprint(player_grid)
-                    pprint(enemy_grid)
+                if game_start:
+                    if pos[0] <= 450 and pos[1] <= 450:
+                        # Change the x/y screen coordinates to grid coordinates
+                        column = pos[0] // (WIDTH + MARGIN)
+                        row = pos[1] // (HEIGHT + MARGIN)
+                        # Set that location to one
+                        if player_grid[row][column] == 0:
+                            player_grid[row][column] = 1
+                        print("Grid coordinates: ", column, row)
+                        pprint(player_grid)
+                        pprint(enemy_grid)
+                if setup_start:
+                    if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
+                        # Change the x/y screen coordinates to grid coordinates
+                        column = (pos[0] - 700) // (WIDTH + MARGIN)
+                        row = pos[1] // (HEIGHT + MARGIN)
+                        # Set that location to one
+                        enemy_grid[row][column] = 3
+                        print("Grid coordinates: ", column, row)
+                        pprint(player_grid)
+                        pprint(enemy_grid)
 
 
     # Display text
