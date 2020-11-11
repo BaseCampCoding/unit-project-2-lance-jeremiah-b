@@ -27,20 +27,20 @@ MARGIN = 5
 pygame.font.init()
 
 # font object
-font = pygame.font.Font('freesansbold.ttf', 32) 
+font = pygame.font.Font("freesansbold.ttf", 32)
 
 # Player text
-player_text = font.render('Your Ships', True, WHITE)
+player_text = font.render("Your Ships", True, WHITE)
 player_textRect = player_text.get_rect()
 player_textRect.center = (925, 480)
 
 # Confirm text
-confirm_text = font.render('Confirm', True, BLACK, RED)
+confirm_text = font.render("Confirm", True, BLACK, RED)
 confirm_textRect = player_text.get_rect()
 confirm_textRect.center = (925, 550)
 
 # Enemey text
-enemy_text = font.render('Enemy Ships', True, WHITE)
+enemy_text = font.render("Enemy Ships", True, WHITE)
 enemy_textRect = confirm_text.get_rect()
 enemy_textRect.center = (230, 480)
 
@@ -73,26 +73,26 @@ pygame.display.set_caption("Battleship")
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
- 
+
 # -------- Main Program Loop -----------
 setup_start = False
 game_start = False
 done = False
 while not done:
     if not setup_start:
-        response = n.send('ready')
+        response = n.send("ready")
         print(response)
-        if response == 'setup start':
-            print('Should be true')
+        if response == "setup start":
+            print("Should be true")
             setup_start = True
     if game_start:
         setup_start = False
-    
+
     # Set the screen background
     screen.fill(BLACK)
 
     if setup_start:
-        for event in pygame.event.get(): # User did something
+        for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -119,10 +119,12 @@ while not done:
                         print("Grid coordinates: ", column, row)
                         pprint(player_grid)
                     # Confirm Button
-                    if (pos[0] > 838 and pos[0] < 965) and (pos[1] >= 530 and pos[1] <= 565):
+                    if (pos[0] > 838 and pos[0] < 965) and (
+                        pos[1] >= 530 and pos[1] <= 565
+                    ):
                         ship_grid = json.dumps(player_grid)
                         print("Confirm")
-                        print(ship_grid)
+                        n.send(ship_grid)
 
     # Display text
     screen.blit(player_text, player_textRect)
@@ -137,17 +139,34 @@ while not done:
                 color = RED
             elif enemy_grid[row][column] == 2:
                 color = WHITE
-            pygame.draw.rect(screen, color, 
-                [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
+            pygame.draw.rect(
+                screen,
+                color,
+                [
+                    (MARGIN + WIDTH) * column + MARGIN,
+                    (MARGIN + HEIGHT) * row + MARGIN,
+                    WIDTH,
+                    HEIGHT,
+                ],
+                4,
+            )
 
     for row in range(10):
         for column in range(10):
             color = SEA_BLUE
             if player_grid[row][column] == 3:
                 color = GREY
-            pygame.draw.rect(screen, color, 
-                [700 + ((MARGIN + WIDTH) * column + MARGIN), (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
-                    
+            pygame.draw.rect(
+                screen,
+                color,
+                [
+                    700 + ((MARGIN + WIDTH) * column + MARGIN),
+                    (MARGIN + HEIGHT) * row + MARGIN,
+                    WIDTH,
+                    HEIGHT,
+                ],
+                4,
+            )
 
     # Limit to 60 frames per second
     clock.tick(60)
