@@ -1,6 +1,7 @@
 import pygame
 from pprint import pprint
 import network
+import json
 
 n = network.Network()
 
@@ -33,9 +34,14 @@ player_text = font.render('Your Ships', True, WHITE)
 player_textRect = player_text.get_rect()
 player_textRect.center = (925, 480)
 
+# Confirm text
+confirm_text = font.render('Confirm', True, BLACK, RED)
+confirm_textRect = player_text.get_rect()
+confirm_textRect.center = (925, 550)
+
 # Enemey text
 enemy_text = font.render('Enemy Ships', True, WHITE)
-enemy_textRect = enemy_text.get_rect()
+enemy_textRect = confirm_text.get_rect()
 enemy_textRect.center = (230, 480)
 
 # Create a 2 dimensional array
@@ -98,8 +104,8 @@ while not done:
                         column = pos[0] // (WIDTH + MARGIN)
                         row = pos[1] // (HEIGHT + MARGIN)
                         # Set that location to one
-                        if player_grid[row][column] == 0:
-                            player_grid[row][column] = 1
+                        if enemy_grid[row][column] == 0:
+                            enemy_grid[row][column] = 1
                         print("Grid coordinates: ", column, row)
                         pprint(player_grid)
                         pprint(enemy_grid)
@@ -109,23 +115,27 @@ while not done:
                         column = (pos[0] - 700) // (WIDTH + MARGIN)
                         row = pos[1] // (HEIGHT + MARGIN)
                         # Set that location to one
-                        enemy_grid[row][column] = 3
+                        player_grid[row][column] = 3
                         print("Grid coordinates: ", column, row)
                         pprint(player_grid)
-                        pprint(enemy_grid)
-
+                    # Confirm Button
+                    if (pos[0] > 838 and pos[0] < 965) and (pos[1] >= 530 and pos[1] <= 565):
+                        ship_grid = json.dumps(player_grid)
+                        print("Confirm")
+                        print(ship_grid)
 
     # Display text
     screen.blit(player_text, player_textRect)
     screen.blit(enemy_text, enemy_textRect)
+    screen.blit(confirm_text, confirm_textRect)
 
     # Draw the grid
     for row in range(10):
         for column in range(10):
             color = SEA_BLUE
-            if player_grid[row][column] == 1:
+            if enemy_grid[row][column] == 1:
                 color = RED
-            elif player_grid[row][column] == 2:
+            elif enemy_grid[row][column] == 2:
                 color = WHITE
             pygame.draw.rect(screen, color, 
                 [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)
@@ -133,7 +143,7 @@ while not done:
     for row in range(10):
         for column in range(10):
             color = SEA_BLUE
-            if enemy_grid[row][column] == 3:
+            if player_grid[row][column] == 3:
                 color = GREY
             pygame.draw.rect(screen, color, 
                 [700 + ((MARGIN + WIDTH) * column + MARGIN), (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT], 4)

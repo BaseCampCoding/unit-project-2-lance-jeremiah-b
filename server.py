@@ -15,8 +15,9 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
+ship_grids = {0: [], 1: []}
 
-def threaded_client(conn):
+def threaded_client(conn, player):
     conn.send(str.encode("Connected"))
     reply = ""
     while True:
@@ -28,6 +29,8 @@ def threaded_client(conn):
             if data:
                 if reply == 'ready':
                     response = 'setup start'
+                if reply.startswith('['):
+                    response = 'game start'
                 print("Received: ", reply)
                 print("Sending : ", response)
             else:
@@ -42,10 +45,10 @@ def threaded_client(conn):
     print("Lost connection")
     conn.close()
 
-players = 0
+currentplayer = 0
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
-    players += 1
-    print(f'{players} Players Connected')
-    start_new_thread(threaded_client, (conn,))
+    start_new_thread(threaded_client, (conn, currentplayer))
+    currentplayer += 1
+    print(f'{currentplayer} Players Connected')
