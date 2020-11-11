@@ -117,7 +117,10 @@ while not done:
                     column = (pos[0] - 700) // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
                     # Set that location to one
-                    player_grid[row][column] = 3
+                    if player_grid[row][column] == 0:
+                        player_grid[row][column] = 3
+                    elif player_grid[row][column] == 3:
+                        player_grid[row][column] = 0
                     print("Grid coordinates: ", column, row)
                     pprint(player_grid)
                 # Confirm Button
