@@ -102,10 +102,10 @@ while not done:
                     # Change the x/y screen coordinates to grid coordinates
                     column = pos[0] // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
+                    print("Grid coordinates: ", column, row)
                     # Set that location to one
                     if enemy_grid[row][column] == 0:
                         enemy_grid[row][column] = 1
-                    print("Grid coordinates: ", column, row)
                     pprint(enemy_grid)
             if setup_start:
                 if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:

@@ -30,10 +30,13 @@ def threaded_client(conn, player):
             if data:
                 if reply == 'ready':
                     response = 'setup start'
-                if reply.startswith('['):
+                elif reply.startswith('['):
                     ship_grids[player] = json.loads(reply)
                     response = 'game start'
                     print(player, ship_grids[player])
+                else:
+                    coord = reply.split(',')
+                    
                 print("Received: ", reply)
                 print("Sending : ", response)
             else:
