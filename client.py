@@ -95,6 +95,7 @@ while not done:
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
 
+    n.send("ready")
     setup_start = False
     if n.wait_for_key("setup start"):
         setup_start = True
