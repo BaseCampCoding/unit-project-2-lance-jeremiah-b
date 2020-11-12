@@ -162,6 +162,11 @@ while not done:
     else:
         turn = False
 
+    # check if the player has won or lost
+    check_win = n.send("win status")
+
+    # check if the enemy 
+
     # Display text
     screen.blit(player_text, player_textRect)
     screen.blit(enemy_text, enemy_textRect)

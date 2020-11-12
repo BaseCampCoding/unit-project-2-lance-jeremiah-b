@@ -19,6 +19,7 @@ print("Waiting for a connection, Server Started")
 ship_grids = {0: [], 1: []}
 
 turn = "9"
+enemy_coords = '["",""]'
 
 def threaded_client(conn, player):
     global turn
@@ -44,6 +45,8 @@ def threaded_client(conn, player):
                     turn = 0
                     checked_grids = True
                 response = str(turn)
+            elif reply == 'win status':
+                pass
             else:
                 x, y = reply.split(',')
                 x, y = int(x), int(y)
