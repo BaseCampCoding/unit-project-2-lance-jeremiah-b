@@ -28,11 +28,17 @@ pygame.font.init()
 
 # font object
 font = pygame.font.Font("freesansbold.ttf", 32)
+l_font = pygame.font.Font("freesansbold.ttf", 48)
 
 # Player text
 player_text = font.render("Your Ships", True, WHITE)
 player_textRect = player_text.get_rect()
 player_textRect.center = (925, 480)
+
+# Enemy text
+enemy_text = font.render("Enemy Ships", True, WHITE)
+enemy_textRect = enemy_text.get_rect()
+enemy_textRect.center = (230, 480)
 
 # Confirm text
 confirm_text = font.render("Confirm", True, BLACK, RED)
@@ -44,10 +50,15 @@ turn_text = font.render("Your Turn", True, WHITE)
 turn_textRect = turn_text.get_rect()
 turn_textRect.center = (230, 550)
 
-# Enemey text
-enemy_text = font.render("Enemy Ships", True, WHITE)
-enemy_textRect = confirm_text.get_rect()
-enemy_textRect.center = (230, 480)
+# Win text
+win_text = l_font.render("You Win", True, WHITE)
+win_textRect = win_text.get_rect()
+win_textRect.center = (575, 40)
+
+# Lose text
+lose_text = l_font.render("You Lose", True, WHITE)
+lose_textRect = lose_text.get_rect()
+lose_textRect.center = (575, 40)
 
 # Create a 2 dimensional array
 player_grid = []
