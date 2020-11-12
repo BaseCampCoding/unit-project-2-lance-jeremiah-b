@@ -65,6 +65,44 @@ ships_text = font.render("Please Place All Ships", True, WHITE)
 ships_textRect = ships_text.get_rect()
 ships_textRect.center = (925, 600)
 
+### Highscore Info Text
+
+# Highscore header text
+hh_text = font.render("---Highscores---", True, WHITE)
+hh_textRect = hh_text.get_rect()
+hh_textRect.center = (578, 90)
+
+# Highscore #1 text
+score_1 = 
+hs1_text = font.render(f"1:   {score_1}", True, WHITE)
+hs1_textRect = hs1_text.get_rect()
+hs1_textRect.center = (578, 130)
+
+# Highscore #2 text
+score_2 = 
+hs2_text = font.render(f"1:   {score_2}", True, WHITE)
+hs2_textRect = hs2_text.get_rect()
+hs2_textRect.center = (578, 170)
+
+# Highscore #3 text
+score_3 = 
+hs3_text = font.render(f"1:   {score_3}", True, WHITE)
+hs3_textRect = hs3_text.get_rect()
+hs3_textRect.center = (578, 210)
+
+# Highscore #4 text
+score_4 = 
+hs4_text = font.render(f"1:   {score_4}", True, WHITE)
+hs4_textRect = hs4_text.get_rect()
+hs4_textRect.center = (578, 250)
+
+# Highscore #5 text
+score_5 = 
+hs5_text = font.render(f"1:   {score_5}", True, WHITE)
+hs5_textRect = hs5_text.get_rect()
+hs5_textRect.center = (578, 250)
+
+
 # Create a 2 dimensional array
 player_grid = []
 for row in range(10):
@@ -124,6 +162,8 @@ while not done:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
+            pygame.quit()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
@@ -175,10 +215,6 @@ while not done:
     else:
         turn = False
 
-    # check if the player has won or lost
-    # check_loss = n.send('win status')
-    # if check_loss == 'lose':
-    #     break
 
     # check if the enemy has fired and where
     check_fire = n.send("fire status")
@@ -192,6 +228,15 @@ while not done:
     # Display text
     screen.blit(player_text, player_textRect)
     screen.blit(enemy_text, enemy_textRect)
+
+    screen.blit(win_text, win_textRect)
+    screen.blit(hh_text, hh_textRect)
+    screen.blit(hs1_text, hs1_textRect)
+    screen.blit(hs2_text, hs2_textRect)
+    screen.blit(hs3_text, hs3_textRect)
+    screen.blit(hs4_text, hs4_textRect)
+    screen.blit(hs5_text, hs5_textRect)
+
     if setup_start:
         screen.blit(confirm_text, confirm_textRect)
         if ships_warning:
@@ -247,6 +292,12 @@ while not done:
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
+    # check if the player has won or lost
+    if game_start:
+        check_loss = n.send('win status')
+        if check_loss != '9':
+            break
+
     if hits == max_ships:
         win = n.send(f"w{player_id}")
         break
@@ -255,7 +306,8 @@ while not done:
 win = False
 lose = False
 
-while True:
+done = False
+while not done:
     check_result = n.send('win status')
     check_result = int(check_result)
     print(check_result)
@@ -272,6 +324,12 @@ while True:
 
     if check_result == player_id:
         screen.blit(win_text, win_textRect)
+        screen.blit(hh_text, hh_textRect)
+        screen.blit(hs1_text, hs1_textRect)
+        screen.blit(hs2_text, hs2_textRect)
+        screen.blit(hs3_text, hs3_textRect)
+        screen.blit(hs4_text, hs4_textRect)
+        screen.blit(hs5_text, hs5_textRect)
     else:
         screen.blit(lose_text, lose_textRect)
 
