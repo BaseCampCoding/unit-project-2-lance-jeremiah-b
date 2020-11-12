@@ -79,11 +79,14 @@ setup_start = False
 game_start = False
 grid_response = ""
 done = False
+# ready response returns a list: ["setup start, {player_id}"]
 response = n.send("ready")
+response = json.loads(response)
 print(response)
-if response == "setup start":
-    print("Should be true")
+player_id = response[1]
+if response[0] == "setup start":
     setup_start = True
+
 while not done:
     if grid_response == "game start":
         setup_start = False

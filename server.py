@@ -27,9 +27,10 @@ def threaded_client(conn, player):
             reply = data.decode("utf-8")
             response = ""
 
-            
+            # sends setup keyword, along with player_id number
             if reply == 'ready':
-                response = 'setup start'
+                response = f'["setup start", {player}]'
+
             elif reply.startswith('['):
                 ship_grids[player] = json.loads(reply)
                 response = 'game start'
