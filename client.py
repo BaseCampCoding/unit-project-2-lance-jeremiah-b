@@ -60,6 +60,11 @@ lose_text = l_font.render("You Lose", True, WHITE)
 lose_textRect = lose_text.get_rect()
 lose_textRect.center = (575, 40)
 
+# Not enough ships warning text
+ships_text = font.render("Please Place All Ships", True, WHITE)
+ships_textRect = ships_text.get_rect()
+ships_textRect.center = (925, 600)
+
 # Create a 2 dimensional array
 player_grid = []
 for row in range(10):
@@ -103,10 +108,16 @@ player_id = response[1]
 if response[0] == "setup start":
     setup_start = True
 
+ships_warning = False
+lose = False
+won = False
+ships = 0
+max_ships = 17
 moves = 0
+hits = 0
 done = False
 while not done:
-    if grid_response[0] == "game start":
+    if grid_response[0] == "game start" and not (won or lose):
         setup_start = False
         game_start = True
     # Set the screen background
@@ -124,23 +135,24 @@ while not done:
                     column = pos[0] // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
                     print("Grid coordinates: ", column, row)
-                    grid_coords = f"{row},{column}"
-                    print(grid_coords)
-                    result = n.send(grid_coords)
-                    print('result =', result)
-                    # Set that location to one
                     if enemy_grid[row][column] == 0:
+                        grid_coords = f"{row},{column}"
+                        print(grid_coords)
+                        result = n.send(grid_coords)
+                        print('result =', result)
+                        # Set that location to result
                         enemy_grid[row][column] = int(result)
+                        if int(result) == 1:
+                            hits += 1
                         moves += 1
                     pprint(enemy_grid)
             if setup_start:
-                ships = 0
                 if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
                     # Change the x/y screen coordinates to grid coordinates
                     column = (pos[0] - 700) // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
                     # Set that location to one
-                    if player_grid[row][column] == 0 and ships <= 15:
+                    if player_grid[row][column] == 0 and ships < max_ships:
                         player_grid[row][column] = 3
                         ships += 1
                     elif player_grid[row][column] == 3:
@@ -149,14 +161,14 @@ while not done:
                     print("Grid coordinates: ", column, row)
                     pprint(player_grid)
                 # Confirm Button
-                if (pos[0] > 838 and pos[0] < 965) and (
-                    pos[1] >= 530 and pos[1] <= 565
-                ):
+                if ((pos[0] > 838 and pos[0] < 965) and (pos[1] >= 530 and pos[1] <= 565)) and ships == max_ships:
                     ship_grid = json.dumps(player_grid)
                     print("Confirm")
                     # grid_response returns a list: ["game start", 0]
                     grid_response = n.send(ship_grid)
                     grid_response = json.loads(grid_response)
+                elif (pos[0] > 838 and pos[0] < 965) and (pos[1] >= 530 and pos[1] <= 565):
+                    ships_warning = True
     
     # update who's turn it is
     check_turn = n.send("turn status")
@@ -166,7 +178,12 @@ while not done:
         turn = False
 
     # check if the player has won or lost
-    # check_win = n.send("win status")
+    if hits == max_ships:
+        n.send(f"w{player_id}")
+        won = True
+    # check_loss = n.send('win status')
+    # if check_loss == 'lose':
+    #     lose = True
 
     # check if the enemy has fired and where
     check_fire = n.send("fire status")
@@ -182,8 +199,14 @@ while not done:
     screen.blit(enemy_text, enemy_textRect)
     if setup_start:
         screen.blit(confirm_text, confirm_textRect)
+        if ships_warning:
+            screen.blit(ships_text, ships_textRect)
     if turn:
         screen.blit(turn_text, turn_textRect)
+    if won:
+        screen.blit(win_text, win_textRect)
+    if lose:
+        screen.blit(lose_text, lose_textRect)
 
     # Draw the grid
     for row in range(10):

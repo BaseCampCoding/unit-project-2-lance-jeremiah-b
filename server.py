@@ -18,13 +18,16 @@ print("Waiting for a connection, Server Started")
 
 ship_grids = {0: [], 1: []}
 
+# 9 is a None value
 turn = "9"
 fire_coords = {0: [], 1: []}
+player_won = "9"
 
 def threaded_client(conn, player):
     global turn
     global ship_grids
     global fire_coords
+    global player_won
     checked_grids = False
     conn.send(str.encode("Connected"))
     reply = ""
@@ -47,8 +50,16 @@ def threaded_client(conn, player):
                     turn = 0
                     checked_grids = True
                 response = str(turn)
+            elif reply.startswith('w'):
+                player_won = reply[1]
+                response = ''
             elif reply == 'win status':
-                pass
+                if player_won == player:
+                    response = 'N/A'
+                elif player_won == "9":
+                    response = 'N/A'
+                else:
+                    response = 'lose'
             elif reply == 'fire status':
                 if player == 0:
                     response = str(fire_coords[1])
