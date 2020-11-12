@@ -140,7 +140,7 @@ while not done:
                     column = (pos[0] - 700) // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
                     # Set that location to one
-                    if player_grid[row][column] == 0:
+                    if player_grid[row][column] == 0 and ships <= 15:
                         player_grid[row][column] = 3
                         ships += 1
                     elif player_grid[row][column] == 3:
