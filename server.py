@@ -102,6 +102,7 @@ def threaded_client(conn, player):
     conn.close()
     currentplayer -= 1
 
+# Listens for connections
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)

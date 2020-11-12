@@ -24,6 +24,13 @@ cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
 def reset_highscores():  # for debugging purposes
     "Resets highscores"
     cur.execute("DELETE FROM Highscores")
+    cur.execute("""INSERT INTO Highscores VALUES
+    (101),
+    (102),
+    (103),
+    (104),
+    (105)
+    """)
     con.commit()
 
 
