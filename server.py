@@ -18,7 +18,11 @@ print("Waiting for a connection, Server Started")
 
 ship_grids = {0: [], 1: [[0, 3, 0, 3, 0, 3, 3, 3, 0, 0], [0, 3, 0, 3, 0, 3, 0, 0, 0, 0], [0, 0, 3, 0, 0, 3, 3, 3, 0, 0], [0, 0, 3, 0, 0, 3, 0, 0, 0, 0], [0, 0, 3, 0, 0, 3, 3, 3, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 3, 3, 3, 0, 3, 3, 3, 0, 0], [0, 3, 0, 0, 0, 0, 3, 0, 0, 0], [0, 3, 3, 0, 0, 0, 3, 0, 0, 0], [0, 3, 3, 3, 0, 0, 3, 0, 0, 0]]}
 
+turn = "9"
+
 def threaded_client(conn, player):
+    global turn
+    checked_grids = False
     conn.send(str.encode("Connected"))
     reply = ""
     while True:
@@ -33,7 +37,13 @@ def threaded_client(conn, player):
 
             elif reply.startswith('['):
                 ship_grids[player] = json.loads(reply)
-                response = 'game start'
+                response = '["game start", 0]'
+            
+            elif reply == 'turn status':
+                if (ship_grids[0] != [] and ship_grids[1] != []) and not checked_grids:
+                    turn = 0
+                    checked_grids = True
+                response = str(turn)
             else:
                 x, y = reply.split(',')
                 x, y = int(x), int(y)
@@ -45,15 +55,19 @@ def threaded_client(conn, player):
                     print('block:', block)
                     if block == 3:
                         response = "1"
+                        turn = 1
                     else:
                         response = "2"
+                        turn = 1
                 elif player == 1:
                     grid = ship_grids[0]
                     block = grid[x][y]
                     if block == 3:
                         response = "1"
+                        turn = 0
                     else:
                         response = "2"
+                        turn = 0
                 else:
                     response = "9"
                 

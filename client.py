@@ -39,6 +39,11 @@ confirm_text = font.render("Confirm", True, BLACK, RED)
 confirm_textRect = player_text.get_rect()
 confirm_textRect.center = (925, 550)
 
+# Turn text
+turn_text = font.render("Your Turn", True, WHITE)
+turn_textRect = turn_text.get_rect()
+turn_textRect.center = (230, 550)
+
 # Enemey text
 enemy_text = font.render("Enemy Ships", True, WHITE)
 enemy_textRect = confirm_text.get_rect()
@@ -77,7 +82,8 @@ clock = pygame.time.Clock()
 # -------- Main Program Loop -----------
 setup_start = False
 game_start = False
-grid_response = ""
+grid_response = "  "
+turn = False
 # ready response returns a list: ["setup start, {player_id}"]
 response = n.send("ready")
 response = json.loads(response)
@@ -89,7 +95,7 @@ if response[0] == "setup start":
 moves = 0
 done = False
 while not done:
-    if grid_response == "game start":
+    if grid_response[0] == "game start":
         setup_start = False
         game_start = True
     # Set the screen background
@@ -101,7 +107,7 @@ while not done:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
-            if game_start:
+            if game_start and turn:
                 if pos[0] <= 450 and pos[1] <= 450:
                     # Change the x/y screen coordinates to grid coordinates
                     column = pos[0] // (WIDTH + MARGIN)
@@ -134,13 +140,24 @@ while not done:
                 ):
                     ship_grid = json.dumps(player_grid)
                     print("Confirm")
+                    # grid_response returns a list: ["game start", 0]
                     grid_response = n.send(ship_grid)
+                    grid_response = json.loads(grid_response)
+    
+    # update who's turn it is
+    check_turn = n.send("turn status")
+    if int(check_turn) == player_id:
+        turn = True
+    else:
+        turn = False
 
     # Display text
     screen.blit(player_text, player_textRect)
     screen.blit(enemy_text, enemy_textRect)
     if setup_start:
         screen.blit(confirm_text, confirm_textRect)
+    if turn:
+        screen.blit(turn_text, turn_textRect)
 
     # Draw the grid
     for row in range(10):
