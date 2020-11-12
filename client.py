@@ -134,6 +134,7 @@ while not done:
                         moves += 1
                     pprint(enemy_grid)
             if setup_start:
+                ships = 0
                 if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
                     # Change the x/y screen coordinates to grid coordinates
                     column = (pos[0] - 700) // (WIDTH + MARGIN)
@@ -141,8 +142,10 @@ while not done:
                     # Set that location to one
                     if player_grid[row][column] == 0:
                         player_grid[row][column] = 3
+                        ships += 1
                     elif player_grid[row][column] == 3:
                         player_grid[row][column] = 0
+                        ships -= 1
                     print("Grid coordinates: ", column, row)
                     pprint(player_grid)
                 # Confirm Button
