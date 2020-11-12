@@ -101,7 +101,7 @@ hs4_textRect.center = (578, 250)
 score_5 = db_setup.display_highscore(4)
 hs5_text = font.render(f"1:   {score_5}", True, WHITE)
 hs5_textRect = hs5_text.get_rect()
-hs5_textRect.center = (578, 250)
+hs5_textRect.center = (578, 290)
 
 
 # Create a 2 dimensional array
