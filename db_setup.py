@@ -17,9 +17,14 @@ cur.execute(
     ('Destroyer', 2, 1)
 """
 )
-con.close()
 
 cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
+
+
+def reset_highscores():
+    "Resets highscores"
+    cur.execute("DELETE FROM Highscores")
+    con.commit()
 
 
 def display_highscores():
@@ -38,7 +43,7 @@ def display_highscores():
     return rows
 
 
-def insert_winners_score(int) -> int:
+def insert_winners_score(score: int) -> int:
     """Inserts the winners score if it is valid
     >>> insert_winners_score(10)
     10
@@ -51,8 +56,8 @@ def insert_winners_score(int) -> int:
     cur.execute("SELECT * FROM Highscores")
     for row in cur.fetchall():
         highscore_list.append(row[0])
-    if not int in highscore_list:
-        cur.execute("INSERT INTO Highscores VALUES (?)", (int,))
+    if not score in highscore_list:
+        cur.execute("INSERT INTO Highscores VALUES (?)", (score,))
     cur.execute("SELECT * FROM Highscores")
     if len(cur.fetchall()) > 5:
         cur.execute("SELECT * FROM Highscores ORDER BY scores DESC LIMIT 1")
