@@ -163,9 +163,16 @@ while not done:
         turn = False
 
     # check if the player has won or lost
-    check_win = n.send("win status")
+    # check_win = n.send("win status")
 
-    # check if the enemy 
+    # check if the enemy has fired and where
+    check_fire = n.send("fire status")
+    check_fire = json.loads(check_fire)
+    if check_fire:
+        print(check_fire)
+        x, y, r = check_fire
+        player_grid[x][y] = r
+        pprint(player_grid)
 
     # Display text
     screen.blit(player_text, player_textRect)
@@ -200,6 +207,10 @@ while not done:
             color = SEA_BLUE
             if player_grid[row][column] == 3:
                 color = GREY
+            elif player_grid[row][column] == 2:
+                color = WHITE
+            elif player_grid[row][column] == 1:
+                color = RED
             pygame.draw.rect(
                 screen,
                 color,

@@ -19,10 +19,12 @@ print("Waiting for a connection, Server Started")
 ship_grids = {0: [], 1: []}
 
 turn = "9"
-enemy_coords = '["",""]'
+fire_coords = {0: [], 1: []}
 
 def threaded_client(conn, player):
     global turn
+    global ship_grids
+    global fire_coords
     checked_grids = False
     conn.send(str.encode("Connected"))
     reply = ""
@@ -47,21 +49,25 @@ def threaded_client(conn, player):
                 response = str(turn)
             elif reply == 'win status':
                 pass
+            elif reply == 'fire status':
+                if player == 0:
+                    response = str(fire_coords[1])
+                elif player == 1:
+                    response = str(fire_coords[0])
             else:
                 x, y = reply.split(',')
                 x, y = int(x), int(y)
                 print('coords =', x, y)
                 if player == 0:
                     grid = ship_grids[1]
-                    print(grid)
                     block = grid[x][y]
-                    print('block:', block)
                     if block == 3:
-                        response = "1"
                         turn = 1
+                        response = "1"
                     else:
                         response = "2"
                         turn = 1
+                    fire_coords[0] = [x, y, int(response)]
                 elif player == 1:
                     grid = ship_grids[0]
                     block = grid[x][y]
@@ -71,6 +77,7 @@ def threaded_client(conn, player):
                     else:
                         response = "2"
                         turn = 0
+                    fire_coords[1] = [x, y, int(response)]
                 else:
                     response = "9"
                 
