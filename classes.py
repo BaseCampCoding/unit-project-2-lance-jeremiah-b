@@ -15,3 +15,5 @@ class ship_classes:
 
 
 Carrier = ship_classes("Carrier", 5, 1)
+
+Carrier

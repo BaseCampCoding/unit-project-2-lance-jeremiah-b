@@ -27,20 +27,13 @@ def reset_highscores():  # for debugging purposes
     con.commit()
 
 
-def display_highscores():
-    """displays the highscores in a row format
-    >>> display_highscores()
+def display_highscore(index):
+    """displays the highscore based off the index up to 5
+    >>> display_highscore(0)
     15
-    20
-    25
-    30
-    40
     """
-    rows = ""
     cur.execute("SELECT * FROM Highscores ORDER BY scores ASC")
-    for row in cur.fetchall():
-        rows += str(row[0]) + "\n"
-    return rows
+    return cur.fetchall()[index][0]
 
 
 def insert_winners_score(score: int) -> int:
@@ -69,4 +62,5 @@ def insert_winners_score(score: int) -> int:
     con.commit()
 
 
+print(display_highscore(4))
 con.close()
