@@ -60,6 +60,3 @@ def insert_winners_score(score: int) -> int:
         max_num = cur.fetchall()[0][0]
         cur.execute("DELETE FROM Highscores WHERE scores = ?", (str(max_num),))
     con.commit()
-
-
-con.close()

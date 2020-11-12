@@ -81,25 +81,25 @@ hs1_textRect.center = (578, 130)
 
 # Highscore #2 text
 score_2 = db_setup.display_highscore(1)
-hs2_text = font.render(f"1:   {score_2}", True, WHITE)
+hs2_text = font.render(f"2:   {score_2}", True, WHITE)
 hs2_textRect = hs2_text.get_rect()
 hs2_textRect.center = (578, 170)
 
 # Highscore #3 text
 score_3 = db_setup.display_highscore(2)
-hs3_text = font.render(f"1:   {score_3}", True, WHITE)
+hs3_text = font.render(f"3:   {score_3}", True, WHITE)
 hs3_textRect = hs3_text.get_rect()
 hs3_textRect.center = (578, 210)
 
 # Highscore #4 text
 score_4 = db_setup.display_highscore(3)
-hs4_text = font.render(f"1:   {score_4}", True, WHITE)
+hs4_text = font.render(f"4:   {score_4}", True, WHITE)
 hs4_textRect = hs4_text.get_rect()
 hs4_textRect.center = (578, 250)
 
 # Highscore #5 text
 score_5 = db_setup.display_highscore(4)
-hs5_text = font.render(f"1:   {score_5}", True, WHITE)
+hs5_text = font.render(f"5:   {score_5}", True, WHITE)
 hs5_textRect = hs5_text.get_rect()
 hs5_textRect.center = (578, 290)
 
@@ -234,14 +234,6 @@ while not done:
     screen.blit(player_text, player_textRect)
     screen.blit(enemy_text, enemy_textRect)
 
-    screen.blit(win_text, win_textRect)
-    screen.blit(hh_text, hh_textRect)
-    screen.blit(hs1_text, hs1_textRect)
-    screen.blit(hs2_text, hs2_textRect)
-    screen.blit(hs3_text, hs3_textRect)
-    screen.blit(hs4_text, hs4_textRect)
-    screen.blit(hs5_text, hs5_textRect)
-
     if setup_start:
         screen.blit(confirm_text, confirm_textRect)
         if ships_warning:
@@ -327,6 +319,7 @@ while not done:
     pygame.display.flip()
 
     if check_result == player_id:
+        db_setup.insert_winners_score(moves)
         screen.blit(win_text, win_textRect)
         screen.blit(hh_text, hh_textRect)
         screen.blit(hs1_text, hs1_textRect)
