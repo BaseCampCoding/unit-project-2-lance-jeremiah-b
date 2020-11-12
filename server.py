@@ -22,8 +22,10 @@ ship_grids = {0: [], 1: []}
 turn = "9"
 fire_coords = {0: [], 1: []}
 player_won = "9"
+currentplayer = 0
 
 def threaded_client(conn, player):
+    global currentplayer
     global turn
     global ship_grids
     global fire_coords
@@ -50,16 +52,13 @@ def threaded_client(conn, player):
                     turn = 0
                     checked_grids = True
                 response = str(turn)
+            elif reply == 'win status':
+                response = player_won
+                print("win status", player_won)
             elif reply.startswith('w'):
                 player_won = reply[1]
-                response = ''
-            elif reply == 'win status':
-                if player_won == player:
-                    response = 'N/A'
-                elif player_won == "9":
-                    response = 'N/A'
-                else:
-                    response = 'lose'
+                print("startswith", player_won)
+                response = player_won
             elif reply == 'fire status':
                 if player == 0:
                     response = str(fire_coords[1])
@@ -92,8 +91,8 @@ def threaded_client(conn, player):
                 else:
                     response = "9"
                 
-            print("Received: ", reply, "From", player)
-            print("Sending : ", response, "To", player)
+            # print("Received: ", reply, "From", player)
+            # print("Sending : ", response, "To", player)
 
             conn.sendall(str.encode(response))
         except:
@@ -101,8 +100,8 @@ def threaded_client(conn, player):
 
     print("Lost connection")
     conn.close()
+    currentplayer -= 1
 
-currentplayer = 0
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)

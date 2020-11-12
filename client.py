@@ -109,15 +109,13 @@ if response[0] == "setup start":
     setup_start = True
 
 ships_warning = False
-lose = False
-won = False
 ships = 0
 max_ships = 17
 moves = 0
 hits = 0
 done = False
 while not done:
-    if grid_response[0] == "game start" and not (won or lose):
+    if grid_response[0] == "game start":
         setup_start = False
         game_start = True
     # Set the screen background
@@ -130,7 +128,7 @@ while not done:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
             if game_start and turn:
-                if pos[0] <= 450 and pos[1] <= 450:
+                if pos[0] <= 450 and pos[1] <= 445:
                     # Change the x/y screen coordinates to grid coordinates
                     column = pos[0] // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
@@ -178,12 +176,9 @@ while not done:
         turn = False
 
     # check if the player has won or lost
-    if hits == max_ships:
-        n.send(f"w{player_id}")
-        won = True
     # check_loss = n.send('win status')
     # if check_loss == 'lose':
-    #     lose = True
+    #     break
 
     # check if the enemy has fired and where
     check_fire = n.send("fire status")
@@ -203,10 +198,7 @@ while not done:
             screen.blit(ships_text, ships_textRect)
     if turn:
         screen.blit(turn_text, turn_textRect)
-    if won:
-        screen.blit(win_text, win_textRect)
-    if lose:
-        screen.blit(lose_text, lose_textRect)
+    
 
     # Draw the grid
     for row in range(10):
@@ -254,5 +246,33 @@ while not done:
 
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
+
+    if hits == max_ships:
+        win = n.send(f"w{player_id}")
+        break
+
+# end screen
+win = False
+lose = False
+
+while True:
+    check_result = n.send('win status')
+    check_result = int(check_result)
+    print(check_result)
+
+    for event in pygame.event.get():  # User did something
+        if event.type == pygame.QUIT:  # If user clicked close
+            done = True  # Flag that we are done so we exit this loop
+
+    # Limit to 60 frames per second
+    clock.tick(60)
+
+    # Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
+
+    if check_result == player_id:
+        screen.blit(win_text, win_textRect)
+    else:
+        screen.blit(lose_text, lose_textRect)
 
 pygame.quit()
