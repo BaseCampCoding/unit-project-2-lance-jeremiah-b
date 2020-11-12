@@ -78,7 +78,6 @@ clock = pygame.time.Clock()
 setup_start = False
 game_start = False
 grid_response = ""
-done = False
 # ready response returns a list: ["setup start, {player_id}"]
 response = n.send("ready")
 response = json.loads(response)
@@ -87,6 +86,8 @@ player_id = response[1]
 if response[0] == "setup start":
     setup_start = True
 
+moves = 0
+done = False
 while not done:
     if grid_response == "game start":
         setup_start = False
@@ -113,6 +114,7 @@ while not done:
                     # Set that location to one
                     if enemy_grid[row][column] == 0:
                         enemy_grid[row][column] = int(result)
+                        moves += 1
                     pprint(enemy_grid)
             if setup_start:
                 if (pos[0] > 700 and pos[0] < 1150) and pos[1] <= 450:
