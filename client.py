@@ -2,6 +2,7 @@ import pygame
 from pprint import pprint
 import network
 import json
+import db_setup
 
 n = network.Network()
 
@@ -73,31 +74,31 @@ hh_textRect = hh_text.get_rect()
 hh_textRect.center = (578, 90)
 
 # Highscore #1 text
-score_1 = 
+score_1 = db_setup.display_highscore(0)
 hs1_text = font.render(f"1:   {score_1}", True, WHITE)
 hs1_textRect = hs1_text.get_rect()
 hs1_textRect.center = (578, 130)
 
 # Highscore #2 text
-score_2 = 
+score_2 = db_setup.display_highscore(1)
 hs2_text = font.render(f"1:   {score_2}", True, WHITE)
 hs2_textRect = hs2_text.get_rect()
 hs2_textRect.center = (578, 170)
 
 # Highscore #3 text
-score_3 = 
+score_3 = db_setup.display_highscore(2)
 hs3_text = font.render(f"1:   {score_3}", True, WHITE)
 hs3_textRect = hs3_text.get_rect()
 hs3_textRect.center = (578, 210)
 
 # Highscore #4 text
-score_4 = 
+score_4 = db_setup.display_highscore(3)
 hs4_text = font.render(f"1:   {score_4}", True, WHITE)
 hs4_textRect = hs4_text.get_rect()
 hs4_textRect.center = (578, 250)
 
 # Highscore #5 text
-score_5 = 
+score_5 = db_setup.display_highscore(4)
 hs5_text = font.render(f"1:   {score_5}", True, WHITE)
 hs5_textRect = hs5_text.get_rect()
 hs5_textRect.center = (578, 250)
@@ -177,7 +178,7 @@ while not done:
                         grid_coords = f"{row},{column}"
                         print(grid_coords)
                         result = n.send(grid_coords)
-                        print('result =', result)
+                        print("result =", result)
                         # Set that location to result
                         enemy_grid[row][column] = int(result)
                         if int(result) == 1:
@@ -199,22 +200,26 @@ while not done:
                     print("Grid coordinates: ", column, row)
                     pprint(player_grid)
                 # Confirm Button
-                if ((pos[0] > 838 and pos[0] < 965) and (pos[1] >= 530 and pos[1] <= 565)) and ships == max_ships:
+                if (
+                    (pos[0] > 838 and pos[0] < 965)
+                    and (pos[1] >= 530 and pos[1] <= 565)
+                ) and ships == max_ships:
                     ship_grid = json.dumps(player_grid)
                     print("Confirm")
                     # grid_response returns a list: ["game start", 0]
                     grid_response = n.send(ship_grid)
                     grid_response = json.loads(grid_response)
-                elif (pos[0] > 838 and pos[0] < 965) and (pos[1] >= 530 and pos[1] <= 565):
+                elif (pos[0] > 838 and pos[0] < 965) and (
+                    pos[1] >= 530 and pos[1] <= 565
+                ):
                     ships_warning = True
-    
+
     # update who's turn it is
     check_turn = n.send("turn status")
     if int(check_turn) == player_id:
         turn = True
     else:
         turn = False
-
 
     # check if the enemy has fired and where
     check_fire = n.send("fire status")
@@ -243,7 +248,6 @@ while not done:
             screen.blit(ships_text, ships_textRect)
     if turn:
         screen.blit(turn_text, turn_textRect)
-    
 
     # Draw the grid
     for row in range(10):
@@ -294,8 +298,8 @@ while not done:
 
     # check if the player has won or lost
     if game_start:
-        check_loss = n.send('win status')
-        if check_loss != '9':
+        check_loss = n.send("win status")
+        if check_loss != "9":
             break
 
     if hits == max_ships:
@@ -308,7 +312,7 @@ lose = False
 
 done = False
 while not done:
-    check_result = n.send('win status')
+    check_result = n.send("win status")
     check_result = int(check_result)
     print(check_result)
 

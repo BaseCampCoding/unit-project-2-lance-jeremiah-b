@@ -62,5 +62,4 @@ def insert_winners_score(score: int) -> int:
     con.commit()
 
 
-print(display_highscore(4))
 con.close()
