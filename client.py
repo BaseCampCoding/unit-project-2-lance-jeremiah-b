@@ -11,6 +11,8 @@ n = network.Network()
 # 2 is a miss
 # 3 is a ship
 
+moves = 0
+
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -68,41 +70,42 @@ ships_textRect.center = (925, 600)
 
 ### Highscore Info Text
 
+hs_y = 160
+
 # Highscore header text
 hh_text = font.render("---Highscores---", True, WHITE)
 hh_textRect = hh_text.get_rect()
-hh_textRect.center = (578, 90)
+hh_textRect.center = (578, hs_y)
 
 # Highscore #1 text
 score_1 = db_setup.display_highscore(0)
 hs1_text = font.render(f"1:   {score_1}", True, WHITE)
 hs1_textRect = hs1_text.get_rect()
-hs1_textRect.center = (578, 130)
+hs1_textRect.center = (578, hs_y + 40)
 
 # Highscore #2 text
 score_2 = db_setup.display_highscore(1)
 hs2_text = font.render(f"2:   {score_2}", True, WHITE)
 hs2_textRect = hs2_text.get_rect()
-hs2_textRect.center = (578, 170)
+hs2_textRect.center = (578, hs_y + 80)
 
 # Highscore #3 text
 score_3 = db_setup.display_highscore(2)
 hs3_text = font.render(f"3:   {score_3}", True, WHITE)
 hs3_textRect = hs3_text.get_rect()
-hs3_textRect.center = (578, 210)
+hs3_textRect.center = (578, hs_y + 120)
 
 # Highscore #4 text
 score_4 = db_setup.display_highscore(3)
 hs4_text = font.render(f"4:   {score_4}", True, WHITE)
 hs4_textRect = hs4_text.get_rect()
-hs4_textRect.center = (578, 250)
+hs4_textRect.center = (578, hs_y + 160)
 
 # Highscore #5 text
 score_5 = db_setup.display_highscore(4)
 hs5_text = font.render(f"5:   {score_5}", True, WHITE)
 hs5_textRect = hs5_text.get_rect()
-hs5_textRect.center = (578, 290)
-
+hs5_textRect.center = (578, hs_y + 200)
 
 # Create a 2 dimensional array
 player_grid = []
@@ -150,7 +153,6 @@ if response[0] == "setup start":
 ships_warning = False
 ships = 0
 max_ships = 17
-moves = 0
 hits = 0
 done = False
 while not done:
@@ -298,6 +300,11 @@ while not done:
         win = n.send(f"w{player_id}")
         break
 
+# Moves text
+moves_text = font.render(f"Moves:   {moves}", True, WHITE)
+moves_textRect = moves_text.get_rect()
+moves_textRect.center = (575, 100)
+
 # end screen
 win = False
 lose = False
@@ -327,6 +334,7 @@ while not done:
         screen.blit(hs3_text, hs3_textRect)
         screen.blit(hs4_text, hs4_textRect)
         screen.blit(hs5_text, hs5_textRect)
+        screen.blit(moves_text, moves_textRect)
     else:
         screen.blit(lose_text, lose_textRect)
 
