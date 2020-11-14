@@ -1,28 +1,30 @@
 import sqlite3
 
-con = sqlite3.connect("Battleship.db")
+def db_highscore_init():
+    con = sqlite3.connect("Battleship.db")
+    cur = con.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
+    return con, cur
 
-cur = con.cursor()
 
-cur.execute(
-    "CREATE TABLE IF NOT EXISTS Ships(name TEXT, length INTEGER, width INTEGER)"
-)
+    # cur.execute(
+    #     "CREATE TABLE IF NOT EXISTS Ships(name TEXT, length INTEGER, width INTEGER)"
+    # )
 
-cur.execute(
-    """INSERT INTO Ships VALUES
-    ('Carrier', 5, 1),
-    ('Battleship', 4, 1),
-    ('Cruiser', 3, 1),
-    ('Submarine', 3, 1),
-    ('Destroyer', 2, 1)
-"""
-)
-
-cur.execute("CREATE TABLE IF NOT EXISTS Highscores(scores INTEGER)")
+    # cur.execute(
+    #     """INSERT INTO Ships VALUES
+    #     ('Carrier', 5, 1),
+    #     ('Battleship', 4, 1),
+    #     ('Cruiser', 3, 1),
+    #     ('Submarine', 3, 1),
+    #     ('Destroyer', 2, 1)
+    # """
+    # )
 
 
 def reset_highscores():  # for debugging purposes
     "Resets highscores"
+    con, cur = db_highscore_init()
     cur.execute("DELETE FROM Highscores")
     cur.execute("""INSERT INTO Highscores VALUES
     (101),
@@ -39,6 +41,7 @@ def display_highscore(index):
     >>> display_highscore(0)
     15
     """
+    con, cur = db_highscore_init()
     cur.execute("SELECT * FROM Highscores ORDER BY scores ASC")
     return cur.fetchall()[index][0]
 
@@ -52,6 +55,7 @@ def insert_winners_score(score: int) -> int:
     25
     30
     """
+    con, cur = db_highscore_init()
     # checks highscore_list to make sure that scores are unique
     highscore_list = []
     cur.execute("SELECT * FROM Highscores")
@@ -67,3 +71,7 @@ def insert_winners_score(score: int) -> int:
         max_num = cur.fetchall()[0][0]
         cur.execute("DELETE FROM Highscores WHERE scores = ?", (str(max_num),))
     con.commit()
+
+if __name__ == "__main__":
+    reset_highscores()
+    print(display_highscore(0))
